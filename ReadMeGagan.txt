@@ -4,6 +4,8 @@
 		List<Integer> actualDeptIdList = empList.stream().map(emp -> emp.getDepartment().getDeptId()).distinct()
 				.sorted().collect(Collectors.toList());
 				
+Stream<T> distinct();
+			
 2.Collectors.groupBy() in getDepartmensWithMaxAvgSalary
 
 Map<Department, List<Employee>> m = empList.stream()
@@ -45,3 +47,10 @@ where identity is the starting value and accumulator is the binary operation we 
  Optional<Double> maxAverageSalaryOptional = avgSalaryMap.values().stream()
 				.max((sal1, sal2) -> (int) (sal1 - sal2));
 				
+5. Peek vs forEach() -> increaseSalaryByFivePercentAndPrintInDescendingOrder
+
+ Stream<T> peek(Consumer<? super T> action);
+ void forEach(Consumer<? super T> action);
+ 
+ Peek is an intermediate operation while forEach is terminal operation.
+ Chaining possible for peek but not possible for forEach since its return type is void

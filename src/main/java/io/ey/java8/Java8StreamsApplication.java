@@ -32,7 +32,16 @@ public class Java8StreamsApplication {
 		getDepartmensWithMaxAvgSalary(empList, deptList);
 		streamReduceExample();
 		getDepartmentAndLocationWithMinCumulativeSalary(empList, deptList);
+		increaseSalaryByFivePercentAndPrintInDescendingOrder(empList);
 
+	}
+
+	private static void increaseSalaryByFivePercentAndPrintInDescendingOrder(List<Employee> empList) {
+		empList.stream().peek(emp -> {
+			emp.setSalary((int) (emp.getSalary() * 105.0 / 100.0));
+		}).sorted((e1, e2) -> e2.getSalary() - e1.getSalary()).forEach(emp -> {
+			System.out.println("EmpId: " + emp.getEmpid() + " Salary: " + emp.getSalary());
+		});
 	}
 
 	private static void getDepartmentAndLocationWithMinCumulativeSalary(List<Employee> empList,
