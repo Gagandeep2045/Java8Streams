@@ -33,10 +33,18 @@ public class Java8StreamsApplication {
 		streamReduceExample();
 		getDepartmentAndLocationWithMinCumulativeSalary(empList, deptList);
 		increaseSalaryByFivePercentAndPrintInDescendingOrder(empList);
-
+		predictOutput();
 	}
 
+	private static void predictOutput() {
+		String s = "hackerearth";
+		s.chars().distinct().peek(ch -> System.out.println(ch)).sorted();
+	}
+
+	// No Output since stream is never executed as peek is intermediate
+	// operation not terminal operation
 	private static void increaseSalaryByFivePercentAndPrintInDescendingOrder(List<Employee> empList) {
+
 		empList.stream().peek(emp -> {
 			emp.setSalary((int) (emp.getSalary() * 105.0 / 100.0));
 		}).sorted((e1, e2) -> e2.getSalary() - e1.getSalary()).forEach(emp -> {
