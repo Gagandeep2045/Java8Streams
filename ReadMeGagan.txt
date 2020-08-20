@@ -5,6 +5,7 @@
 				.sorted().collect(Collectors.toList());
 				
 Stream<T> distinct();
+Distinct uses the equals() method of the elements to decide whether two elements are equal or not.
 			
 2.Collectors.groupBy() in getDepartmensWithMaxAvgSalary
 
@@ -54,3 +55,15 @@ where identity is the starting value and accumulator is the binary operation we 
  
  Peek is an intermediate operation while forEach is terminal operation.
  Chaining possible for peek but not possible for forEach since its return type is void
+ 
+ 6. Optional<T> min(Comparator<? super T> comparator);
+ 			VS
+  Optional<T> max(Comparator<? super T> comparator);
+  			VS
+  Stream<T> sorted(Comparator<? super T> comparator);
+  
+ 6. Short Circuit Operations - Do later
+ skip()
+limit()
+ https://www.logicbig.com/tutorials/core-java-tutorial/java-util-stream/short-circuiting.html
+  

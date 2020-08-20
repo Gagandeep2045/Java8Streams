@@ -15,6 +15,7 @@ import io.ey.java8.domain.Department;
 import io.ey.java8.domain.Employee;
 import io.ey.java8.repository.DepartmentRepository;
 import io.ey.java8.repository.EmployeeRepository;
+import static java.util.stream.Collectors.*;
 
 @SpringBootApplication
 public class Java8StreamsApplication {
@@ -32,6 +33,7 @@ public class Java8StreamsApplication {
 		getDepartmensWithMaxAvgSalary(empList, deptList);
 		streamReduceExample();
 		getDepartmentAndLocationWithMinCumulativeSalary(empList, deptList);
+		getDepartmentAndLocationWithMinCumulativeSalary_OptimalSoln(empList, deptList);
 		increaseSalaryByFivePercentAndPrintInDescendingOrder(empList);
 		predictOutput();
 	}
@@ -70,6 +72,43 @@ public class Java8StreamsApplication {
 		int minimumSalarySumForDeptAndCity = minimumCumulativeSalary.get();
 		List<Entry<DepartmentAndCity, Integer>> mimimumSlarySumDeptAndCity = salaryMap.entrySet().stream()
 				.filter(entry -> entry.getValue() == minimumSalarySumForDeptAndCity).collect(Collectors.toList());
+		System.out.println(mimimumSlarySumDeptAndCity);
+	}
+	
+	/*The {@code mapping()} collectors are most useful when used in a
+    * multi-level reduction, such as downstream of a {@code groupingBy} or
+    * {@code partitioningBy}.  For example, given a stream of
+    * {@code Person}, to accumulate the set of last names in each city:
+    * <pre>{@code
+    * Map<City, Set<String>> lastNamesByCity
+    *   = people.stream().collect(
+    *     groupingBy(Person::getCity,
+    *                mapping(Person::getLastName,
+    *                        toSet())));
+    * }
+    * 
+     public static <T, K, A, D>
+    Collector<T, ?, Map<K, D>> groupingBy(Function<? super T, ? extends K> classifier,
+                                          Collector<? super T, A, D> downstream) {
+        return groupingBy(classifier, HashMap::new, downstream);
+    }
+    
+    * */
+	//--------Usage of mapping() in groupingBy()
+	private static void getDepartmentAndLocationWithMinCumulativeSalary_OptimalSoln(List<Employee> empList,
+			List<Department> deptList) {
+
+		Map<DepartmentAndCity, List<Integer>> salaryMap = empList.stream()
+				.collect(groupingBy(emp -> new DepartmentAndCity(emp.getDepartment(), emp.getCity()),
+						Collectors.mapping(emp -> emp.getSalary(), toList())));
+		Map<DepartmentAndCity, Integer> totalSalaryMap = new HashMap<>();
+		salaryMap.forEach((deptAndCity, listSalary) -> {
+			int total = listSalary.stream().reduce(0, (x, y) -> x + y);
+			totalSalaryMap.put(deptAndCity, total);
+		});
+		int mimimumSalary = totalSalaryMap.values().stream().min((x, y) -> x - y).get();
+		List<Entry<DepartmentAndCity, Integer>> mimimumSlarySumDeptAndCity = totalSalaryMap.entrySet().stream()
+				.filter(e -> e.getValue() == mimimumSalary).collect(Collectors.toList());
 		System.out.println(mimimumSlarySumDeptAndCity);
 	}
 
